@@ -24,9 +24,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.systemfailed.calculatorapp.ui.calculator.viewmodel.CalculatorViewModel
 
 @Composable
 fun Calculator() {
+    val viewModel = viewModel<CalculatorViewModel>()
+    val state = viewModel.state
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -39,7 +44,9 @@ fun Calculator() {
                 .align(Alignment.BottomCenter),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            ResultScreen()
+            ResultScreen(
+                state.number1 + (state.operation?.symbol ?: "") + state.number2
+            )
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -51,7 +58,7 @@ fun Calculator() {
                         .aspectRatio(2f)
                         .weight(2f)
                 ) {
-
+                    viewModel.onAction(Action.Clear)
                 }
                 NumberScreen(
                     number = "C",
@@ -59,7 +66,7 @@ fun Calculator() {
                         .aspectRatio(1f)
                         .weight(1f)
                 ) {
-
+                    viewModel.onAction(Action.Delete)
                 }
                 NumberScreen(
                     number = "/",
@@ -67,7 +74,7 @@ fun Calculator() {
                         .aspectRatio(1f)
                         .weight(1f)
                 ) {
-
+                    viewModel.onAction(Action.Operation(CalculatorOperation.Divide))
                 }
             }
             Row(
@@ -81,7 +88,7 @@ fun Calculator() {
                         .aspectRatio(1f)
                         .weight(1f)
                 ) {
-
+                    viewModel.onAction(Action.Number(7))
                 }
                 NumberScreen(
                     number = "8",
@@ -89,7 +96,7 @@ fun Calculator() {
                         .aspectRatio(1f)
                         .weight(1f)
                 ) {
-
+                    viewModel.onAction(Action.Number(8))
                 }
                 NumberScreen(
                     number = "9",
@@ -97,7 +104,7 @@ fun Calculator() {
                         .aspectRatio(1f)
                         .weight(1f)
                 ) {
-
+                    viewModel.onAction(Action.Number(9))
                 }
                 NumberScreen(
                     number = "X",
@@ -105,7 +112,7 @@ fun Calculator() {
                         .aspectRatio(1f)
                         .weight(1f)
                 ) {
-
+                    viewModel.onAction(Action.Operation(CalculatorOperation.Multiply))
                 }
             }
             Row(
@@ -119,7 +126,7 @@ fun Calculator() {
                         .aspectRatio(1f)
                         .weight(1f)
                 ) {
-
+                    viewModel.onAction(Action.Number(4))
                 }
                 NumberScreen(
                     number = "5",
@@ -127,7 +134,7 @@ fun Calculator() {
                         .aspectRatio(1f)
                         .weight(1f)
                 ) {
-
+                    viewModel.onAction(Action.Number(5))
                 }
                 NumberScreen(
                     number = "6",
@@ -135,7 +142,7 @@ fun Calculator() {
                         .aspectRatio(1f)
                         .weight(1f)
                 ) {
-
+                    viewModel.onAction(Action.Number(6))
                 }
                 NumberScreen(
                     number = "-",
@@ -143,7 +150,7 @@ fun Calculator() {
                         .aspectRatio(1f)
                         .weight(1f)
                 ) {
-
+                    viewModel.onAction(Action.Operation(CalculatorOperation.Subtract))
                 }
             }
             Row(
@@ -157,7 +164,7 @@ fun Calculator() {
                         .aspectRatio(1f)
                         .weight(1f)
                 ) {
-
+                    viewModel.onAction(Action.Number(1))
                 }
                 NumberScreen(
                     number = "2",
@@ -165,7 +172,7 @@ fun Calculator() {
                         .aspectRatio(1f)
                         .weight(1f)
                 ) {
-
+                    viewModel.onAction(Action.Number(2))
                 }
                 NumberScreen(
                     number = "3",
@@ -173,7 +180,7 @@ fun Calculator() {
                         .aspectRatio(1f)
                         .weight(1f)
                 ) {
-
+                    viewModel.onAction(Action.Number(3))
                 }
                 NumberScreen(
                     number = "+",
@@ -181,7 +188,7 @@ fun Calculator() {
                         .aspectRatio(1f)
                         .weight(1f)
                 ) {
-
+                    viewModel.onAction(Action.Operation(CalculatorOperation.Add))
                 }
             }
             Row(
@@ -195,7 +202,7 @@ fun Calculator() {
                         .aspectRatio(2f)
                         .weight(2f)
                 ) {
-
+                    viewModel.onAction(Action.Number(0))
                 }
                 NumberScreen(
                     number = ".",
@@ -203,7 +210,7 @@ fun Calculator() {
                         .aspectRatio(1f)
                         .weight(1f)
                 ) {
-
+                    viewModel.onAction(Action.Decimal)
                 }
                 NumberScreen(
                     number = "=",
@@ -211,7 +218,7 @@ fun Calculator() {
                         .aspectRatio(1f)
                         .weight(1f)
                 ) {
-
+                    viewModel.onAction(Action.Calculate)
                 }
             }
         }
@@ -219,13 +226,15 @@ fun Calculator() {
 }
 
 @Composable
-fun ResultScreen() {
+fun ResultScreen(
+    text: String
+) {
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 32.dp),
         fontWeight = FontWeight.Black,
-        text = "Enter the operation",
+        text = text,
         textAlign = TextAlign.End,
         fontSize = 56.sp,
         maxLines = 2
